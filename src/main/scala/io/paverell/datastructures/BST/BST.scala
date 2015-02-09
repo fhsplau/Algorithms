@@ -1,5 +1,18 @@
 package io.paverell.datastructures.BST
 
+// TODO add constructor
+// TODO add Node to non-empty tree
+// TODO add Node to empty tree
+// TODO sort
+// TODO print => toString
+// TODO delete element
+// TODO merge trees => try to do something bether than O(n)
+// TODO change to funcional programming
+// TODO is balanced
+// TODO do balance
+// TODO get method => add keys => O(n) or bether
+// TODO flatt
+
 abstract class BSTree {
   def add(e: Int): BSTree
 
