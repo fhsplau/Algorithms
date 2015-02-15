@@ -55,8 +55,8 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
   }
 
   test("queue is empty after poped all elements") {
-    queue = multiPush(queue,List((10,1),(12,2)))
-    queue = multiPop(queue,2)
+    queue = multiPush(queue, List((10, 1), (12, 2)))
+    queue = multiPop(queue, 2)
 
     assert(queue.isEmpty)
   }
@@ -70,9 +70,9 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
     assert(queue.size == 1)
   }
 
-  test("after two pushes and two pops size is equal to 0"){
-    queue = multiPush(queue,List((10,1),(8,1)))
-    queue = multiPop(queue,2)
+  test("after two pushes and two pops size is equal to 0") {
+    queue = multiPush(queue, List((10, 1), (8, 1)))
+    queue = multiPop(queue, 2)
 
     assert(queue.size == 0)
   }
@@ -100,7 +100,7 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
   }
 
   test("highest priority in empty queue is 0") {
-    assert(queue.highestPriority == 0)
+    assert(queue.highestPriority == null)
   }
 
   test("can add to queue") {
@@ -115,7 +115,7 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
     def pushAndAssertHP(p: Int, t: Int): Unit = {
       hp = if (p > hp) p else hp
       queue.push(p, t)
-      assert(queue.highestPriority == hp)
+      assert(queue.highestPriority.get == hp)
     }
 
     val toPush = List((10, 1), (12, 2), (9, 1), (11, 0))
@@ -128,7 +128,7 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
     queue = multiPush(queue, List((10, 1), (1, 1)))
     queue = multiPop(queue, 2)
 
-    assert(queue.highestPriority == 0)
+    assert(queue.highestPriority == null)
   }
 
   def multiPush(q: PriorityQueue, toPush: List[(Int, Int)]): PriorityQueue = {
