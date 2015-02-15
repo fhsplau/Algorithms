@@ -60,10 +60,26 @@ case class NonEmptyQueue(priority: Int, task: Int, var rightQueue: BSTQueue, var
     impl(rightQueue, priority)
   }
 
-  def insert(node: NonEmptyQueue): Unit =
-    if (rightQueue.asInstanceOf[NonEmptyQueue].priority == node.priority) {
-      rightQueue = node.leftQueue
-    } else rightQueue.asInstanceOf[NonEmptyQueue].insert(node)
+  def insert(node: NonEmptyQueue): BSTQueue = {
+
+    def impl: BSTQueue = {
+      val right = rightQueue.asInstanceOf[NonEmptyQueue]
+      if (right.priority == node.priority)
+        rightQueue = node.leftQueue
+      else right.insert(node)
+
+      this
+    }
+
+    node match {
+      case i if i.priority == priority => if (i.leftQueue.isEmpty) new EmptyQueue
+      else {
+        val nodeLeft = i.leftQueue.asInstanceOf[NonEmptyQueue]
+        new NonEmptyQueue(nodeLeft.priority, nodeLeft.task, nodeLeft.rightQueue, nodeLeft.leftQueue)
+      }
+      case _ => impl
+    }
+  }
 
   override def toString = "{" + leftQueue + priority + rightQueue + "}"
 }
@@ -74,22 +90,19 @@ class PriorityQueue(maxSize: Int) {
 
   private var s = 0
 
-  def highestPriority: Option[Int] = if (head.isEmpty) null else Some(head.asInstanceOf[NonEmptyQueue].highestPriorityInNode)
+  def highestPriority: Option[Int] =
+    if (head.isEmpty) null
+    else Some(head.asInstanceOf[NonEmptyQueue].highestPriorityInNode)
 
   def size: Int = s
 
   def isEmpty: Boolean = head.isEmpty
 
   def pop: Int = {
-    val node = head.pop(highestPriority.getOrElse(0))
-
-    if (head.asInstanceOf[NonEmptyQueue].priority == highestPriority.getOrElse(0))
-      head = node.asInstanceOf[NonEmptyQueue].leftQueue
-    else
-      head.asInstanceOf[NonEmptyQueue].insert(node.asInstanceOf[NonEmptyQueue])
-
-    s = s - 1
-    node.asInstanceOf[NonEmptyQueue].task
+    val node = head.pop(highestPriority.getOrElse(0)).asInstanceOf[NonEmptyQueue]
+    head = head.asInstanceOf[NonEmptyQueue].insert(node)
+    s = if (s < 0) 0 else s - 1
+    node.task
   }
 
   def push(priority: Int, task: Int): PriorityQueue =
