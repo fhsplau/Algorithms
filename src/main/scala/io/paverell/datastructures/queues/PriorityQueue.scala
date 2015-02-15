@@ -86,21 +86,21 @@ case class NonEmptyQueue(priority: Int, task: Int, var rightQueue: BSTQueue, var
 
 class PriorityQueue(maxSize: Int) {
 
-  private var head: BSTQueue = new EmptyQueue
+  private var queue: BSTQueue = new EmptyQueue
 
   private var s = 0
 
   def highestPriority: Option[Int] =
-    if (head.isEmpty) null
-    else Some(head.asInstanceOf[NonEmptyQueue].highestPriorityInNode)
+    if (queue.isEmpty) null
+    else Some(queue.asInstanceOf[NonEmptyQueue].highestPriorityInNode)
 
   def size: Int = s
 
-  def isEmpty: Boolean = head.isEmpty
+  def isEmpty: Boolean = queue.isEmpty
 
   def pop: Int = {
-    val node = head.pop(highestPriority.getOrElse(0)).asInstanceOf[NonEmptyQueue]
-    head = head.asInstanceOf[NonEmptyQueue].insert(node)
+    val node = queue.pop(highestPriority.getOrElse(0)).asInstanceOf[NonEmptyQueue]
+    queue = queue.asInstanceOf[NonEmptyQueue].insert(node)
     s = if (s < 0) 0 else s - 1
     node.task
   }
@@ -108,14 +108,14 @@ class PriorityQueue(maxSize: Int) {
   def push(priority: Int, task: Int): PriorityQueue =
     if (s > maxSize - 1) throw new IndexOutOfBoundsException
     else {
-      head = head.push(priority, task)
+      queue = queue.push(priority, task)
       s += 1
       this
     }
 
-  def contains(priority: Int): Boolean = head.contains(priority)
+  def contains(priority: Int): Boolean = queue.contains(priority)
 
   override def toString =
-    if (!head.isEmpty) head.asInstanceOf[NonEmptyQueue].toString
-    else head.asInstanceOf[EmptyQueue].toString
+    if (!queue.isEmpty) queue.asInstanceOf[NonEmptyQueue].toString
+    else queue.asInstanceOf[EmptyQueue].toString
 }
