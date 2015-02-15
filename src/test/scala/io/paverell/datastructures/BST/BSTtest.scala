@@ -13,7 +13,7 @@ class BSTtest extends FunSuite with BeforeAndAfter{
   }
 
   test("new tree is empty") {
-    assert(!tree.contains(0))
+    assert(tree.isEmpty)
   }
 
   test("can add to the tree") {
@@ -45,6 +45,7 @@ class BSTtest extends FunSuite with BeforeAndAfter{
     tree.add(3)
     tree.add(1)
 
+    assert(tree.contains(2))
     assert(!tree.contains(4))
   }
 

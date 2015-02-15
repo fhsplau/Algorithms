@@ -28,26 +28,30 @@ class EmptyNode extends BSTree {
 }
 
 class Node(e: Int, left: BSTree, right: BSTree) extends BSTree {
-  override def add(element: Int): BSTree = element match {
-    case i if i > e => right.add(i)
-    case i if i < e => left.add(i)
-  }
+  override def add(element: Int): BSTree =
+    if (element > e) new Node(e, left, right.add(element))
+    else if (element < e) new Node(e, left.add(element), right)
+    else this
 
-  override def contains(element: Int): Boolean = element match {
-    case i if i == e => true
-    case i if i > e => right.contains(i)
-    case i if i < e => left.contains(i)
-  }
+  override def contains(element: Int): Boolean =
+    if (element > e) right.contains(element)
+    else if (element < e) left.contains(element)
+    else true
 }
 
 
-class BST extends BSTree {
+class BST {
 
-  private var root: BSTree = new EmptyNode
+  private var root: BSTree = null
 
-  override def contains(element: Int) = root.contains(element)
+  def isEmpty: Boolean = root == null
 
-  override def add(element: Int): BSTree = {
+  def contains(element: Int) = root.contains(element)
+
+  def add(element: Int): BSTree = if (root == null) {
+    root = new Node(element, new EmptyNode, new EmptyNode)
+    root
+  } else {
     root = root.add(element)
     root
   }
