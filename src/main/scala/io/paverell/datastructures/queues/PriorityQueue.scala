@@ -11,6 +11,8 @@ trait Queue {
 abstract class BSTQueue extends Queue {
   def contains(priority: Int): Boolean
 
+  def highestPriority: Int
+
   val isEmpty: Boolean
 }
 
@@ -23,6 +25,8 @@ class EmptyQueue extends BSTQueue {
     new EmptyQueue,
     new EmptyQueue
   )
+
+  override def highestPriority: Int = null
 
   override val isEmpty = true
 
@@ -49,7 +53,7 @@ case class NonEmptyQueue(priority: Int, task: Int, var rightQueue: BSTQueue, var
     case _ => true
   }
 
-  def highestPriorityInNode: Int = {
+  def highestPriority: Int = {
     def impl(q: BSTQueue, prevPriority: Int): Int =
       if (q.isEmpty) prevPriority
       else impl(q.asInstanceOf[NonEmptyQueue].rightQueue,
@@ -92,7 +96,7 @@ class PriorityQueue(maxSize: Int) {
 
   def highestPriority: Option[Int] =
     if (queue.isEmpty) null
-    else Some(queue.asInstanceOf[NonEmptyQueue].highestPriorityInNode)
+    else Some(queue.highestPriority)
 
   def size: Int = s
 
