@@ -19,7 +19,8 @@ abstract class BSTQueue extends Queue {
 class EmptyQueue extends BSTQueue {
   override def pop(priority: Int): (Int, BSTQueue) = throw new RuntimeException("EMPTY QUEUE")
 
-  override def push(priority: Int, task: Int): BSTQueue = new NonEmptyQueue(priority, task, new EmptyQueue, new EmptyQueue)
+  override def push(priority: Int, task: Int): BSTQueue =
+    new NonEmptyQueue(priority, task, new EmptyQueue, new EmptyQueue)
 
   override def highestPriority: Option[Int] = null
 
@@ -30,7 +31,8 @@ class EmptyQueue extends BSTQueue {
   override def toString = "."
 }
 
-case class NonEmptyQueue(nodePriority: Int, task: Int, var rightQueue: BSTQueue, var leftQueue: BSTQueue) extends BSTQueue {
+case class NonEmptyQueue(nodePriority: Int, task: Int,
+                         var rightQueue: BSTQueue, var leftQueue: BSTQueue) extends BSTQueue {
 
   override val isEmpty = false
 
