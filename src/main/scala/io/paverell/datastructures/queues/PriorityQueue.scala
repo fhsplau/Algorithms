@@ -40,9 +40,9 @@ case class NonEmptyQueue(priority: Int, task: Int, var rightQueue: BSTQueue, var
   override val isEmpty = false
 
   override def pop(p: Int): (Int, BSTQueue) = {
-    def retrieveNodeWithHighestPriority(node: BSTQueue): BSTQueue = {
-      val n = node.asInstanceOf[NonEmptyQueue]
-      if (n.priority == p) n else retrieveNodeWithHighestPriority(n.rightQueue)
+    def retrieveNodeWithHighestPriority(node: NonEmptyQueue): NonEmptyQueue = {
+      if (node.priority == p) node
+      else retrieveNodeWithHighestPriority(node.rightQueue.asInstanceOf[NonEmptyQueue])
     }
 
     def insert(node: NonEmptyQueue, q: BSTQueue): BSTQueue = {
@@ -67,7 +67,7 @@ case class NonEmptyQueue(priority: Int, task: Int, var rightQueue: BSTQueue, var
       if(node.priority==priority) replaceRoot(node) else insertNode(q)
     }
 
-    val nodeWithHighestPriority = retrieveNodeWithHighestPriority(this).asInstanceOf[NonEmptyQueue]
+    val nodeWithHighestPriority = retrieveNodeWithHighestPriority(this)
 
     (nodeWithHighestPriority.task, insert(nodeWithHighestPriority,this))
   }
