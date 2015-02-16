@@ -1,13 +1,11 @@
 package io.paverell.datastructures.queues
 
-trait Queue {
+abstract class BSTQueue {
+  type Task = Int => (Int, BSTQueue)
 
   def push(priority: Int, task: Int): BSTQueue
 
-}
-
-abstract class BSTQueue extends Queue {
-  def pop(priority: Int): (Int, BSTQueue)
+  def pop: Task
 
   def contains(priority: Int): Boolean
 
@@ -17,7 +15,7 @@ abstract class BSTQueue extends Queue {
 }
 
 class EmptyQueue extends BSTQueue {
-  override def pop(priority: Int): (Int, BSTQueue) = throw new RuntimeException("EMPTY QUEUE")
+  override def pop: Task = (priority: Int) => throw new RuntimeException("EMPTY QUEUE")
 
   override def push(priority: Int, task: Int): BSTQueue =
     new NonEmptyQueue(priority, task, new EmptyQueue, new EmptyQueue)
@@ -36,7 +34,7 @@ case class NonEmptyQueue(nodePriority: Int, task: Int,
 
   override val isEmpty = false
 
-  override def pop(priority: Int): (Int, BSTQueue) = {
+  override def pop: Task = (priority: Int) => {
     def getNodeWithHighestPriority(queue: NonEmptyQueue): NonEmptyQueue = {
       if (queue.nodePriority == priority) queue
       else getNodeWithHighestPriority(queue.rightQueue.asInstanceOf[NonEmptyQueue])
