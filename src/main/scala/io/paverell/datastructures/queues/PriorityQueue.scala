@@ -2,13 +2,13 @@ package io.paverell.datastructures.queues
 
 trait Queue {
 
-  def pop(p: Int): BSTQueue
-
   def push(priority: Int, task: Int): BSTQueue
 
 }
 
 abstract class BSTQueue extends Queue {
+  def pop(p: Int): (Int, BSTQueue)
+
   def contains(priority: Int): Boolean
 
   def highestPriority: Option[Int]
@@ -17,7 +17,7 @@ abstract class BSTQueue extends Queue {
 }
 
 class EmptyQueue extends BSTQueue {
-  override def pop(p: Int): BSTQueue = throw new RuntimeException("EMPTY QUEUE")
+  override def pop(p: Int): (Int, BSTQueue) = throw new RuntimeException("EMPTY QUEUE")
 
   override def push(priority: Int, task: Int): BSTQueue = new NonEmptyQueue(
     priority,
@@ -39,7 +39,38 @@ case class NonEmptyQueue(priority: Int, task: Int, var rightQueue: BSTQueue, var
 
   override val isEmpty = false
 
-  override def pop(p: Int): BSTQueue = if (priority == p) this else rightQueue.pop(p)
+  override def pop(p: Int): (Int, BSTQueue) = {
+    def retrieveNodeWithHighestPriority(node: BSTQueue): BSTQueue = {
+      val n = node.asInstanceOf[NonEmptyQueue]
+      if (n.priority == p) n else retrieveNodeWithHighestPriority(n.rightQueue)
+    }
+
+    def insert(node: NonEmptyQueue, q: BSTQueue): BSTQueue = {
+
+      def insertNode(rq: BSTQueue): BSTQueue = {
+        val queue = rq.asInstanceOf[NonEmptyQueue]
+        if (queue.priority == node.priority)
+          rightQueue = node.leftQueue
+        else insertNode(queue.rightQueue)
+
+        this
+      }
+
+      def replaceRoot(root: NonEmptyQueue): BSTQueue = {
+        if (root.leftQueue.isEmpty) new EmptyQueue
+        else {
+          val left = root.leftQueue.asInstanceOf[NonEmptyQueue]
+          new NonEmptyQueue(left.priority, left.task, left.rightQueue, left.leftQueue)
+        }
+      }
+
+      if(node.priority==priority) replaceRoot(node) else insertNode(q)
+    }
+
+    val nodeWithHighestPriority = retrieveNodeWithHighestPriority(this).asInstanceOf[NonEmptyQueue]
+
+    (nodeWithHighestPriority.task, insert(nodeWithHighestPriority,this))
+  }
 
   override def push(p: Int, t: Int): BSTQueue = {
     if (p < priority) new NonEmptyQueue(priority, task, rightQueue, leftQueue.push(p, t))
@@ -64,27 +95,6 @@ case class NonEmptyQueue(priority: Int, task: Int, var rightQueue: BSTQueue, var
     Some(impl(rightQueue, priority))
   }
 
-  def insert(node: NonEmptyQueue): BSTQueue = {
-
-    def impl: BSTQueue = {
-      val right = rightQueue.asInstanceOf[NonEmptyQueue]
-      if (right.priority == node.priority)
-        rightQueue = node.leftQueue
-      else right.insert(node)
-
-      this
-    }
-
-    node match {
-      case i if i.priority == priority => if (i.leftQueue.isEmpty) new EmptyQueue
-      else {
-        val nodeLeft = i.leftQueue.asInstanceOf[NonEmptyQueue]
-        new NonEmptyQueue(nodeLeft.priority, nodeLeft.task, nodeLeft.rightQueue, nodeLeft.leftQueue)
-      }
-      case _ => impl
-    }
-  }
-
   override def toString = "{" + leftQueue + priority + rightQueue + "}"
 }
 
@@ -94,6 +104,8 @@ class PriorityQueue(maxSize: Int) {
 
   private var s = 0
 
+  var currentTask: Option[Int] = null
+
   def highestPriority: Option[Int] = queue.highestPriority
 
   def size: Int = s
@@ -101,10 +113,10 @@ class PriorityQueue(maxSize: Int) {
   def isEmpty: Boolean = queue.isEmpty
 
   def pop: Int = {
-    val node = queue.pop(highestPriority.getOrElse(0)).asInstanceOf[NonEmptyQueue]
-    queue = queue.asInstanceOf[NonEmptyQueue].insert(node)
+    val r = queue.pop(highestPriority.getOrElse(0))
+    queue = r._2
     s = if (s < 0) 0 else s - 1
-    node.task
+    r._1
   }
 
   def push(priority: Int, task: Int): PriorityQueue =

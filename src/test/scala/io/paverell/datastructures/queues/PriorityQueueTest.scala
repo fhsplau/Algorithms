@@ -77,7 +77,7 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
     assert(queue.size == 0)
   }
 
-  test("exception if max size excided") {
+  test("exception if max size exceed") {
     var aQueue = new PriorityQueue(2)
     aQueue = multiPush(aQueue, List((10, 1), (11, 2)))
 
@@ -86,7 +86,7 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
     }
   }
 
-  test("no excepion about max size after pop") {
+  test("no exception about max size after pop") {
     var aQueue = new PriorityQueue(2)
     aQueue = multiPush(aQueue, List((10, 1), (11, 2)))
 
@@ -147,7 +147,7 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
     q
   }
 
-  def multiContain(q: PriorityQueue, piorityList: List[Int]): Boolean =
-    if (piorityList.isEmpty) true
-    else q.contains(piorityList.head) && multiContain(q, piorityList.tail)
+  def multiContain(q: PriorityQueue, priorityList: List[Int]): Boolean =
+    if (priorityList.isEmpty) true
+    else q.contains(priorityList.head) && multiContain(q, priorityList.tail)
 }
