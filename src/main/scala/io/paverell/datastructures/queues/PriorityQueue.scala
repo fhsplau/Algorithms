@@ -3,7 +3,7 @@ package io.paverell.datastructures.queues
 abstract class BSTQueue {
   type Task = Int => (Int, BSTQueue)
 
-  def push(priority: Int, task: Int): BSTQueue
+  def push: (Int, Int) => BSTQueue
 
   def pop: Task
 
@@ -17,7 +17,7 @@ abstract class BSTQueue {
 class EmptyQueue extends BSTQueue {
   override def pop: Task = (priority: Int) => throw new RuntimeException("EMPTY QUEUE")
 
-  override def push(priority: Int, task: Int): BSTQueue =
+  override def push: (Int,Int) => BSTQueue = (priority: Int, task: Int) =>
     new NonEmptyQueue(priority, task, new EmptyQueue, new EmptyQueue)
 
   override def highestPriority: Option[Int] = null
@@ -35,12 +35,15 @@ case class NonEmptyQueue(nodePriority: Int, task: Int,
   override val isEmpty = false
 
   override def pop: Task = (priority: Int) => {
-    def getNodeWithHighestPriority(queue: NonEmptyQueue): NonEmptyQueue = {
-      if (queue.nodePriority == priority) queue
-      else getNodeWithHighestPriority(queue.rightQueue.asInstanceOf[NonEmptyQueue])
-    }
+    val nwhp = {
 
-    val nwhp = getNodeWithHighestPriority(this)
+      def getNodeWithHighestPriority(queue: NonEmptyQueue): NonEmptyQueue = {
+        if (queue.nodePriority == priority) queue
+        else getNodeWithHighestPriority(queue.rightQueue.asInstanceOf[NonEmptyQueue])
+      }
+
+      getNodeWithHighestPriority(this)
+    }
 
     def insertHPInto(queue: NonEmptyQueue): BSTQueue = {
 
@@ -65,7 +68,7 @@ case class NonEmptyQueue(nodePriority: Int, task: Int,
     (nwhp.task, insertHPInto(this))
   }
 
-  override def push(p: Int, t: Int): BSTQueue = {
+  override def push: (Int,Int) => BSTQueue = (p: Int, t: Int) => {
     if (p < nodePriority) new NonEmptyQueue(nodePriority, task, rightQueue, leftQueue.push(p, t))
     else if (p > nodePriority) new NonEmptyQueue(nodePriority, task, rightQueue.push(p, t), leftQueue)
     else this
@@ -112,7 +115,7 @@ class PriorityQueue(maxSize: Int) {
     r._1
   }
 
-  def push(priority: Int, task: Int): PriorityQueue =
+  def push: (Int,Int)=>PriorityQueue = (priority: Int, task: Int) =>
     if (s > maxSize - 1) throw new IndexOutOfBoundsException
     else {
       queue = queue.push(priority, task)
