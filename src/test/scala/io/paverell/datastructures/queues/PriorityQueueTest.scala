@@ -25,6 +25,11 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
     }
   }
 
+  test("after push queue is not empty") {
+    queue.push(10,1)
+    assert(!queue.isEmpty)
+  }
+
   test("can push element to the queue") {
     queue.push(10,1)
 
@@ -67,10 +72,8 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
     queue.pop()
 
     assert(!queue.contains(12))
-    assert(queue.contains(10))
-    assert(queue.contains(9))
-    assert(queue.contains(8))
-    assert(queue.contains(11))
+
+    assert(queue.multiContain(List(10,9,8,11)))
   }
 
   test("queue is empty after poped all elements") {

@@ -31,6 +31,7 @@ case class BSTQueue(priority: Int, task: Int) {
   }
 
   def highestPriority: Int = if (right == null) priority else right.highestPriority
+
   def smalestPriority: Int = if (left == null) priority else left.smalestPriority
 }
 
@@ -42,19 +43,20 @@ class PriorityQueue(maxSize: Int) {
 
   private var s = 0
 
-  def highestPriority = if(root == null) null else root.highestPriority
+  def highestPriority = if (root == null) null else root.highestPriority
 
   def size = s
 
-  def isEmpty = true
+  def isEmpty = if(root == null) true else false
 
-  def pop: Task = () => if (root == null) throw new RuntimeException
-  else {
-    val tmp = root.pop(root.highestPriority)
-    s = s - 1
-    root = tmp._2
-    tmp._1
-  }
+  def pop: Task = () =>
+    if (root == null) throw new RuntimeException
+    else {
+      val tmp = root.pop(root.highestPriority)
+      s = s - 1
+      root = tmp._2
+      tmp._1
+    }
 
   def push: (Int, Int) => PriorityQueue = (priority: Int, task: Int) =>
     if (size == maxSize) throw new IndexOutOfBoundsException
