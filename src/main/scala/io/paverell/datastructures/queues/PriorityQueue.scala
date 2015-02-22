@@ -33,9 +33,9 @@ case class BSTQueue(priority: Int, task: Int) {
     if (right == null) priority
     else right.highestPriority
 
-  def smallestPriority: Int =
+  def lowestPriority: Int =
     if (left == null) priority
-    else left.smallestPriority
+    else left.lowestPriority
 
 }
 
@@ -49,7 +49,7 @@ class PriorityQueue(maxSize: Int) {
 
   def highestPriority = if (root == null) null else root.highestPriority
 
-  def smallestPriority = if(root == null) null else root.smallestPriority
+  def lowestPriority = if(root == null) null else root.lowestPriority
 
   def size = s
 

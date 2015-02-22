@@ -150,14 +150,14 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
 
   test("smalest priority") {
     queue.multiPush(List((10,1),(12,2),(8,1)))
-    assert(queue.smallestPriority == 8)
+    assert(queue.lowestPriority == 8)
 
     queue.push(1,1)
-    assert(queue.smallestPriority == 1)
+    assert(queue.lowestPriority == 1)
   }
 
   test("smalest priority of empty queue equals to null"){
-    assert(queue.smallestPriority == null)
+    assert(queue.lowestPriority == null)
   }
 
 }
