@@ -13,26 +13,30 @@ case class BSTQueue(priority: Int, task: Int) {
     this
   }
 
-  def pop: Int => (Int, BSTQueue) = (hp: Int) => {
+  def pop: Int => (Int, BSTQueue) = (hp: Int) =>
     if (hp == priority) (task, left)
     else if (hp == right.priority) {
       val tmp = right.task
       right = right.left
       (tmp, this)
-    } else right.pop(hp)
-  }
+    }
+    else right.pop(hp)
 
-  def contains: Int => Boolean = (p: Int) => {
+  def contains: Int => Boolean = (p: Int) => 
     if (p == priority) true
     else if (p < priority && left == null) false
     else if (p > priority && right == null) false
     else if (p > priority) right.contains(p)
     else left.contains(p)
-  }
 
-  def highestPriority: Int = if (right == null) priority else right.highestPriority
+  def highestPriority: Int =
+    if (right == null) priority
+    else right.highestPriority
 
-  def smalestPriority: Int = if (left == null) priority else left.smalestPriority
+  def smallestPriority: Int =
+    if (left == null) priority
+    else left.smallestPriority
+
 }
 
 class PriorityQueue(maxSize: Int) {
@@ -44,6 +48,8 @@ class PriorityQueue(maxSize: Int) {
   private var s = 0
 
   def highestPriority = if (root == null) null else root.highestPriority
+
+  def smallestPriority = if(root == null) null else root.smallestPriority
 
   def size = s
 
