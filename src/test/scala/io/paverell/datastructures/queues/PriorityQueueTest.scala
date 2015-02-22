@@ -9,10 +9,10 @@ import PQTestFramework.tf
 @RunWith(classOf[JUnitRunner])
 class PriorityQueueTest extends FunSuite with BeforeAndAfter {
 
-  var queue: PriorityQueue = _
+  var queue: PriorityQueue[Int] = _
 
   before {
-    queue = new PriorityQueue(10)
+    queue = new PriorityQueue[Int](10)
   }
 
   test("empty queue") {
@@ -100,7 +100,7 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
   }
 
   test("exception if max size exceed") {
-    var aQueue = new PriorityQueue(2)
+    var aQueue = new PriorityQueue[Int](2)
     aQueue = aQueue multiPush List((10, 1), (11, 2))
 
     intercept[IndexOutOfBoundsException] {
@@ -109,7 +109,7 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
   }
 
   test("no exception about max size after pop") {
-    var aQueue = new PriorityQueue(2)
+    var aQueue = new PriorityQueue[Int](2)
     aQueue = aQueue multiPush List((10, 1), (11, 2))
 
     intercept[IndexOutOfBoundsException] {
@@ -158,6 +158,17 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
 
   test("smalest priority of empty queue equals to null"){
     assert(queue.lowestPriority == null)
+  }
+
+  test("priority queue with string") {
+    val aQueue = new PriorityQueue[String](2)
+
+    aQueue.multiPush(List((10,"a"),(8,"b")))
+
+    assert(aQueue.multiContain(List(10,8)))
+
+    assert(aQueue.pop() == "a")
+
   }
 
 }

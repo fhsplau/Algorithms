@@ -1,11 +1,11 @@
 package io.paverell.datastructures.queues
 
-case class BSTQueue(priority: Int, task: Int) {
-  var right: BSTQueue = null
-  var left: BSTQueue = null
+case class BSTQueue[T](priority: Int, task: T) {
+  var right: BSTQueue[T] = null
+  var left: BSTQueue[T] = null
 
-  def push: (Int, Int) => BSTQueue = (p: Int, t: Int) => {
-    if (p > priority && right == null) right = new BSTQueue(p, t)
+  def push: (Int, T) => BSTQueue[T] = (p: Int, t: T) => {
+    if (p > priority && right == null) right = new BSTQueue[T](p, t)
     else if (p < priority && left == null) left = new BSTQueue(p, t)
     else if (p > priority) right.push(p, t)
     else left.push(p, t)
@@ -13,7 +13,7 @@ case class BSTQueue(priority: Int, task: Int) {
     this
   }
 
-  def pop: Int => (Int, BSTQueue) = (hp: Int) =>
+  def pop: Int => (T, BSTQueue[T]) = (hp: Int) =>
     if (hp == priority) (task, left)
     else if (hp == right.priority) {
       val tmp = right.task
@@ -22,7 +22,7 @@ case class BSTQueue(priority: Int, task: Int) {
     }
     else right.pop(hp)
 
-  def contains: Int => Boolean = (p: Int) => 
+  def contains: Int => Boolean = (p: Int) =>
     if (p == priority) true
     else if (p < priority && left == null) false
     else if (p > priority && right == null) false
@@ -39,21 +39,21 @@ case class BSTQueue(priority: Int, task: Int) {
 
 }
 
-class PriorityQueue(maxSize: Int) {
+class PriorityQueue[T](maxSize: Int) {
 
-  type Task = () => Int
+  type Task = () => T
 
-  private var root: BSTQueue = null
+  private var root: BSTQueue[T] = null
 
   private var s = 0
 
   def highestPriority = if (root == null) null else root.highestPriority
 
-  def lowestPriority = if(root == null) null else root.lowestPriority
+  def lowestPriority = if (root == null) null else root.lowestPriority
 
   def size = s
 
-  def isEmpty = if(root == null) true else false
+  def isEmpty = if (root == null) true else false
 
   def pop: Task = () =>
     if (root == null) throw new RuntimeException
@@ -64,11 +64,11 @@ class PriorityQueue(maxSize: Int) {
       tmp._1
     }
 
-  def push: (Int, Int) => PriorityQueue = (priority: Int, task: Int) =>
+  def push: (Int, T) => PriorityQueue[T] = (priority: Int, task: T) =>
     if (size == maxSize) throw new IndexOutOfBoundsException
     else {
       if (root != null) root = root.push(priority, task)
-      else root = new BSTQueue(priority, task)
+      else root = new BSTQueue[T](priority, task)
 
       s = s + 1
 
@@ -78,5 +78,4 @@ class PriorityQueue(maxSize: Int) {
   def contains: Int => Boolean = (priority: Int) =>
     if (root == null) false
     else root.contains(priority)
-
 }

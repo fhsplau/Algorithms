@@ -1,8 +1,8 @@
 package io.paverell.datastructures.queues
 
-class TestFramework(q: PriorityQueue){
+class TestFramework[T](q: PriorityQueue[T]){
 
-  def multiPush(toPush: List[(Int, Int)]): PriorityQueue = {
+  def multiPush(toPush: List[(Int, T)]): PriorityQueue[T] = {
     for (push <- toPush) {
       q.push(push._1, push._2)
     }
@@ -10,7 +10,7 @@ class TestFramework(q: PriorityQueue){
     q
   }
 
-  def multiPop(howMany: Int): PriorityQueue = {
+  def multiPop(howMany: Int): PriorityQueue[T] = {
     for (t <- 0 to howMany - 1) {
       q.pop()
     }
@@ -24,5 +24,5 @@ class TestFramework(q: PriorityQueue){
 }
 
 object PQTestFramework {
-  implicit def tf(q: PriorityQueue): TestFramework = new TestFramework(q)
+  implicit def tf[T](q: PriorityQueue[T]): TestFramework[T] = new TestFramework[T](q)
 }
