@@ -100,8 +100,6 @@ class PriorityQueue(maxSize: Int) {
 
   private var s = 0
 
-  var currentTask: Option[Int] = null
-
   def highestPriority: Option[Int] = queue.highestPriority
 
   def size: Int = s
