@@ -5,10 +5,12 @@ case class BSTQueue[T](priority: Int, task: T) {
   var left: BSTQueue[T] = null
 
   def push: (Int, T) => BSTQueue[T] = (p: Int, t: T) => {
-    if (p > priority && right == null) right = new BSTQueue[T](p, t)
-    else if (p < priority && left == null) left = new BSTQueue(p, t)
-    else if (p > priority) right.push(p, t)
-    else left.push(p, t)
+    if (p > priority)
+      if(right == null) right = new BSTQueue[T](p, t)
+      else right.push(p, t)
+    else if (p < priority)
+      if(left==null) left = new BSTQueue(p, t)
+      else left.push(p, t)
 
     this
   }
@@ -23,11 +25,9 @@ case class BSTQueue[T](priority: Int, task: T) {
     else right.pop(hp)
 
   def contains: Int => Boolean = (p: Int) =>
-    if (p == priority) true
-    else if (p < priority && left == null) false
-    else if (p > priority && right == null) false
-    else if (p > priority) right.contains(p)
-    else left.contains(p)
+    if (p < priority) if(left == null) false else left.contains(p)
+    else if (p > priority) if(right == null) false else right.contains(p)
+    else true
 
   def highestPriority: Int =
     if (right == null) priority
