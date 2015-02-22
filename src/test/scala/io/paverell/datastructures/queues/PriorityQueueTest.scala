@@ -21,19 +21,19 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
 
   test("pop from empty queue") {
     intercept[RuntimeException] {
-      queue.pop
+      queue.pop()
     }
   }
 
   test("can pop from non empty queue") {
     queue = queue multiPush List((10, 1), (12, 2))
 
-    assert(queue.pop == 2)
+    assert(queue.pop() == 2)
   }
 
   test("pop root element") {
     queue = queue multiPush List((10, 1), (9, 1), (8, 1))
-    queue.pop
+    queue.pop()
 
     assert(!queue.contains(10))
     assert(queue.multiContain(List(9, 8)))
@@ -41,16 +41,16 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
 
   test("runtime exception after one push one and two pops") {
     queue.push(10, 1)
-    queue.pop
+    queue.pop()
 
     intercept[RuntimeException] {
-      queue.pop
+      queue.pop()
     }
   }
 
   test("after pop queue does not contain element") {
     queue = queue multiPush List((10, 1), (12, 2))
-    queue.pop
+    queue.pop()
 
     assert(!queue.contains(12))
     assert(queue.contains(10))
@@ -96,7 +96,7 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
       aQueue.push(1, 1)
     }
 
-    aQueue.pop
+    aQueue.pop()
     aQueue.push(20, 1)
     assert(aQueue.contains(20))
   }

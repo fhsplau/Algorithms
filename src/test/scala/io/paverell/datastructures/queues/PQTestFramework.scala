@@ -12,7 +12,7 @@ class TestFramework(q: PriorityQueue){
 
   def multiPop(howMany: Int): PriorityQueue = {
     for (t <- 0 to howMany - 1) {
-      q.pop
+      q.pop()
     }
 
     q

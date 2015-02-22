@@ -17,7 +17,7 @@ abstract class BSTQueue {
 class EmptyQueue extends BSTQueue {
   override def pop: Task = (priority: Int) => throw new RuntimeException("EMPTY QUEUE")
 
-  override def push: (Int,Int) => BSTQueue = (priority: Int, task: Int) =>
+  override def push: (Int, Int) => BSTQueue = (priority: Int, task: Int) =>
     new NonEmptyQueue(priority, task, new EmptyQueue, new EmptyQueue)
 
   override def highestPriority: Option[Int] = null
@@ -68,7 +68,7 @@ case class NonEmptyQueue(nodePriority: Int, task: Int,
     (nwhp.task, insertHPInto(this))
   }
 
-  override def push: (Int,Int) => BSTQueue = (p: Int, t: Int) => {
+  override def push: (Int, Int) => BSTQueue = (p: Int, t: Int) => {
     if (p < nodePriority) new NonEmptyQueue(nodePriority, task, rightQueue, leftQueue.push(p, t))
     else if (p > nodePriority) new NonEmptyQueue(nodePriority, task, rightQueue.push(p, t), leftQueue)
     else this
@@ -108,14 +108,14 @@ class PriorityQueue(maxSize: Int) {
 
   def isEmpty: Boolean = queue.isEmpty
 
-  def pop: Int = {
+  def pop: () => Int = () => {
     val r = queue.pop(highestPriority.getOrElse(0))
     queue = r._2
     s = if (s < 0) 0 else s - 1
     r._1
   }
 
-  def push: (Int,Int)=>PriorityQueue = (priority: Int, task: Int) =>
+  def push: (Int, Int) => PriorityQueue = (priority: Int, task: Int) =>
     if (s > maxSize - 1) throw new IndexOutOfBoundsException
     else {
       queue = queue.push(priority, task)
