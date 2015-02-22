@@ -7,7 +7,7 @@ abstract class BSTQueue {
 
   def pop: Task
 
-  def contains(priority: Int): Boolean
+  def contains: Int => Boolean
 
   def highestPriority: Option[Int]
 
@@ -24,7 +24,7 @@ class EmptyQueue extends BSTQueue {
 
   override val isEmpty = true
 
-  override def contains(priority: Int): Boolean = false
+  override def contains: Int => Boolean = (priority: Int) => false
 
   override def toString = "."
 }
@@ -74,7 +74,7 @@ case class NonEmptyQueue(nodePriority: Int, task: Int,
     else this
   }
 
-  override def contains(p: Int): Boolean = p match {
+  override def contains: Int => Boolean = {
     case i if i < nodePriority => leftQueue.contains(i)
     case i if i > nodePriority => rightQueue.contains(i)
     case _ => true
@@ -123,7 +123,7 @@ class PriorityQueue(maxSize: Int) {
       this
     }
 
-  def contains(priority: Int): Boolean = queue.contains(priority)
+  def contains: Int => Boolean = (priority: Int) => queue.contains(priority)
 
   override def toString = queue.toString
 }
