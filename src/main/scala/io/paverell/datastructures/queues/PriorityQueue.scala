@@ -45,8 +45,7 @@ case class NonEmptyQueue(nodePriority: Int, task: Int,
     def insertHPInto(queue: NonEmptyQueue): BSTQueue = {
 
       def insertNode(rq: NonEmptyQueue): BSTQueue = {
-        if (rq.nodePriority == nwhp.nodePriority)
-          rightQueue = nwhp.leftQueue
+        if (rq.nodePriority == nwhp.nodePriority) rightQueue = nwhp.leftQueue
         else insertNode(rq.rightQueue.asInstanceOf[NonEmptyQueue])
 
         this
@@ -123,7 +122,5 @@ class PriorityQueue(maxSize: Int) {
 
   def contains(priority: Int): Boolean = queue.contains(priority)
 
-  override def toString =
-    if (!queue.isEmpty) queue.asInstanceOf[NonEmptyQueue].toString
-    else queue.asInstanceOf[EmptyQueue].toString
+  override def toString = queue.toString
 }

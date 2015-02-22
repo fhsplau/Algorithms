@@ -4,6 +4,8 @@ import org.junit.runner.RunWith
 import org.scalatest.{BeforeAndAfter, FunSuite}
 import org.scalatest.junit.JUnitRunner
 
+import PQTestFramework.tf
+
 @RunWith(classOf[JUnitRunner])
 class PriorityQueueTest extends FunSuite with BeforeAndAfter {
 
@@ -24,17 +26,17 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
   }
 
   test("can pop from non empty queue") {
-    queue = multiPush(queue, List((10, 1), (12, 2)))
+    queue = queue multiPush List((10, 1), (12, 2))
 
     assert(queue.pop == 2)
   }
 
   test("pop root element") {
-    queue = multiPush(queue, List((10, 1), (9, 1), (8, 1)))
+    queue = queue multiPush List((10, 1), (9, 1), (8, 1))
     queue.pop
 
     assert(!queue.contains(10))
-    assert(multiContain(queue, List(9, 8)))
+    assert(queue.multiContain(List(9, 8)))
   }
 
   test("runtime exception after one push one and two pops") {
@@ -47,7 +49,7 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
   }
 
   test("after pop queue does not contain element") {
-    queue = multiPush(queue, List((10, 1), (12, 2)))
+    queue = queue multiPush List((10, 1), (12, 2))
     queue.pop
 
     assert(!queue.contains(12))
@@ -55,8 +57,8 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
   }
 
   test("queue is empty after poped all elements") {
-    queue = multiPush(queue, List((10, 1), (12, 2)))
-    queue = multiPop(queue, 2)
+    queue = queue.multiPush(List((10, 1), (12, 2)))
+    queue = queue.multiPop(2)
 
     assert(queue.isEmpty)
   }
@@ -71,15 +73,15 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
   }
 
   test("after two pushes and two pops size is equal to 0") {
-    queue = multiPush(queue, List((10, 1), (8, 1)))
-    queue = multiPop(queue, 2)
+    queue = queue multiPush List((10, 1), (8, 1))
+    queue = queue multiPop 2
 
     assert(queue.size == 0)
   }
 
   test("exception if max size exceed") {
     var aQueue = new PriorityQueue(2)
-    aQueue = multiPush(aQueue, List((10, 1), (11, 2)))
+    aQueue = aQueue multiPush List((10, 1), (11, 2))
 
     intercept[IndexOutOfBoundsException] {
       aQueue.push(1, 1)
@@ -88,7 +90,7 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
 
   test("no exception about max size after pop") {
     var aQueue = new PriorityQueue(2)
-    aQueue = multiPush(aQueue, List((10, 1), (11, 2)))
+    aQueue = aQueue multiPush List((10, 1), (11, 2))
 
     intercept[IndexOutOfBoundsException] {
       aQueue.push(1, 1)
@@ -104,8 +106,8 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
   }
 
   test("can add to queue") {
-    queue = multiPush(queue, List((10, 100), (12, 0), (8, 0)))
-    multiContain(queue, List(10, 12, 8))
+    queue = queue multiPush List((10, 100), (12, 0), (8, 0))
+    queue multiContain List(10, 12, 8)
   }
 
   test("highest priority") {
@@ -125,29 +127,10 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
   }
 
   test("after queue is poped to empty hp is equal to 0") {
-    queue = multiPush(queue, List((10, 1), (1, 1)))
-    queue = multiPop(queue, 2)
+    queue = queue multiPush List((10, 1), (1, 1))
+    queue = queue multiPop 2
 
     assert(queue.highestPriority == null)
   }
 
-  def multiPush(q: PriorityQueue, toPush: List[(Int, Int)]): PriorityQueue = {
-    for (push <- toPush) {
-      q.push(push._1, push._2)
-    }
-
-    q
-  }
-
-  def multiPop(q: PriorityQueue, howMany: Int): PriorityQueue = {
-    for (t <- 0 to howMany - 1) {
-      q.pop
-    }
-
-    q
-  }
-
-  def multiContain(q: PriorityQueue, priorityList: List[Int]): Boolean =
-    if (priorityList.isEmpty) true
-    else q.contains(priorityList.head) && multiContain(q, priorityList.tail)
 }
