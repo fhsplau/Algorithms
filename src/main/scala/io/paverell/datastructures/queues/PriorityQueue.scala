@@ -1,127 +1,74 @@
 package io.paverell.datastructures.queues
 
-abstract class BSTQueue {
-  type Task = Int => (Int, BSTQueue)
+case class BSTQueue(priority: Int, task: Int) {
+  var right: BSTQueue = null
+  var left: BSTQueue = null
 
-  def push: (Int, Int) => BSTQueue
+  def push: (Int, Int) => BSTQueue = (p: Int, t: Int) => {
+    if (p > priority && right == null) right = new BSTQueue(p, t)
+    else if (p < priority && left == null) left = new BSTQueue(p, t)
+    else if (p > priority) right.push(p, t)
+    else left.push(p, t)
 
-  def pop: Task
-
-  def contains: Int => Boolean
-
-  def highestPriority: Option[Int]
-
-  val isEmpty: Boolean
-}
-
-class EmptyQueue extends BSTQueue {
-  override def pop: Task = (priority: Int) => throw new RuntimeException("EMPTY QUEUE")
-
-  override def push: (Int, Int) => BSTQueue = (priority: Int, task: Int) =>
-    new NonEmptyQueue(priority, task, new EmptyQueue, new EmptyQueue)
-
-  override def highestPriority: Option[Int] = null
-
-  override val isEmpty = true
-
-  override def contains: Int => Boolean = (priority: Int) => false
-
-  override def toString = "."
-}
-
-case class NonEmptyQueue(nodePriority: Int, task: Int,
-                         var rightQueue: BSTQueue, var leftQueue: BSTQueue) extends BSTQueue {
-
-  override val isEmpty = false
-
-  override def pop: Task = (priority: Int) => {
-    val nwhp = {
-
-      def getNodeWithHighestPriority(queue: NonEmptyQueue): NonEmptyQueue = {
-        if (queue.nodePriority == priority) queue
-        else getNodeWithHighestPriority(queue.rightQueue.asInstanceOf[NonEmptyQueue])
-      }
-
-      getNodeWithHighestPriority(this)
-    }
-
-    def insertHPInto(queue: NonEmptyQueue): BSTQueue = {
-
-      def insertNode(rq: NonEmptyQueue): BSTQueue = {
-        if (rq.nodePriority == nwhp.nodePriority) rightQueue = nwhp.leftQueue
-        else insertNode(rq.rightQueue.asInstanceOf[NonEmptyQueue])
-
-        this
-      }
-
-      def replaceRoot(root: NonEmptyQueue): BSTQueue = {
-        if (root.leftQueue.isEmpty) new EmptyQueue
-        else {
-          val left = root.leftQueue.asInstanceOf[NonEmptyQueue]
-          new NonEmptyQueue(left.nodePriority, left.task, left.rightQueue, left.leftQueue)
-        }
-      }
-
-      if (nwhp.nodePriority == nodePriority) replaceRoot(nwhp) else insertNode(queue)
-    }
-
-    (nwhp.task, insertHPInto(this))
+    this
   }
 
-  override def push: (Int, Int) => BSTQueue = (p: Int, t: Int) => {
-    if (p < nodePriority) new NonEmptyQueue(nodePriority, task, rightQueue, leftQueue.push(p, t))
-    else if (p > nodePriority) new NonEmptyQueue(nodePriority, task, rightQueue.push(p, t), leftQueue)
-    else this
+  def pop: Int => (Int, BSTQueue) = (hp: Int) => {
+    if (hp == priority) (task, left)
+    else if (hp == right.priority) {
+      val tmp = right.task
+      right = right.left
+      (tmp, this)
+    } else right.pop(hp)
   }
 
-  override def contains: Int => Boolean = {
-    case i if i < nodePriority => leftQueue.contains(i)
-    case i if i > nodePriority => rightQueue.contains(i)
-    case _ => true
+  def contains: Int => Boolean = (p: Int) => {
+    if (p == priority) true
+    else if (p < priority && left == null) false
+    else if (p > priority && right == null) false
+    else if (p > priority) right.contains(p)
+    else left.contains(p)
   }
 
-  def highestPriority: Option[Int] = {
-    def impl(q: BSTQueue, prevPriority: Int): Int =
-      if (q.isEmpty) prevPriority
-      else impl(q.asInstanceOf[NonEmptyQueue].rightQueue,
-        if (prevPriority > q.asInstanceOf[NonEmptyQueue].nodePriority) prevPriority
-        else q.asInstanceOf[NonEmptyQueue].nodePriority
-      )
-
-    Some(impl(rightQueue, nodePriority))
-  }
-
-  override def toString = "{" + leftQueue + nodePriority + rightQueue + "}"
+  def highestPriority: Int = if (right == null) priority else right.highestPriority
+  def smalestPriority: Int = if (left == null) priority else left.smalestPriority
 }
 
 class PriorityQueue(maxSize: Int) {
 
-  private var queue: BSTQueue = new EmptyQueue
+  type Task = () => Int
+
+  private var root: BSTQueue = null
 
   private var s = 0
 
-  def highestPriority: Option[Int] = queue.highestPriority
+  def highestPriority = if(root == null) null else root.highestPriority
 
-  def size: Int = s
+  def size = s
 
-  def isEmpty: Boolean = queue.isEmpty
+  def isEmpty = true
 
-  def pop: () => Int = () => {
-    val r = queue.pop(highestPriority.getOrElse(0))
-    queue = r._2
-    s = if (s < 0) 0 else s - 1
-    r._1
+  def pop: Task = () => if (root == null) throw new RuntimeException
+  else {
+    val tmp = root.pop(root.highestPriority)
+    s = s - 1
+    root = tmp._2
+    tmp._1
   }
 
   def push: (Int, Int) => PriorityQueue = (priority: Int, task: Int) =>
-    if (s > maxSize - 1) throw new IndexOutOfBoundsException
+    if (size == maxSize) throw new IndexOutOfBoundsException
     else {
-      queue = queue.push(priority, task)
-      s += 1
+      if (root != null) root = root.push(priority, task)
+      else root = new BSTQueue(priority, task)
+
+      s = s + 1
+
       this
     }
 
-  def contains: Int => Boolean = (priority: Int) => queue.contains(priority)
+  def contains: Int => Boolean = (priority: Int) =>
+    if (root == null) false
+    else root.contains(priority)
 
-  override def toString = queue.toString
 }
