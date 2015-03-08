@@ -17,18 +17,14 @@ class QuickSort {
     def partition(left: Int, right: Int): Int = {
       var rightIndex = right - 1
       var leftIndex = left
-      var condition = true
 
-      while (condition) {
-        if (leftIndex >= rightIndex) condition = false
-        else {
+      while (leftIndex < rightIndex) {
           while (array(rightIndex) > array(right) && rightIndex > leftIndex) rightIndex -= 1
           while (array(leftIndex) <= array(right) && leftIndex < right) leftIndex += 1
 
           if (array(leftIndex) >= array(right) && array(rightIndex) <= array(right) &&
             leftIndex <= rightIndex)
             swap(leftIndex, rightIndex)
-        }
       }
 
       var newPivotsIndex = leftIndex
