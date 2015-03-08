@@ -20,7 +20,7 @@ class QuickSort {
 
       while (leftIndex < rightIndex) {
           while (array(rightIndex) > array(right) && rightIndex > leftIndex) rightIndex -= 1
-          while (array(leftIndex) <= array(right) && leftIndex < right) leftIndex += 1
+          while (array(leftIndex) <= array(right) && leftIndex < rightIndex) leftIndex += 1
 
           if (array(leftIndex) >= array(right) && array(rightIndex) <= array(right) &&
             leftIndex <= rightIndex)
