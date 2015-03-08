@@ -32,7 +32,7 @@ class QuicSortTest extends FunSuite with BeforeAndAfter {
   }
 
   test("huge array") {
-    var r = Random
+    val r = Random
     val a: Seq[Int] = 1 to 1000000 map { _ => r.nextInt()}
     val array: ArrayBuffer[Int] = ArrayBuffer(a: _*)
 
