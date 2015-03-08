@@ -31,10 +31,9 @@ class QuickSort {
         }
       }
 
-      var newPivotsIndex = left
+      var newPivotsIndex = leftIndex
 
-      while (array(newPivotsIndex) <= array(right) && newPivotsIndex < right)
-        newPivotsIndex += 1
+      while (array(newPivotsIndex) <= array(right) && newPivotsIndex < right) newPivotsIndex += 1
 
       swap(newPivotsIndex, right)
       newPivotsIndex
