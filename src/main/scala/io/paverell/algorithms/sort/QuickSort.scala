@@ -21,11 +21,9 @@ class QuickSort {
       var leftIndex = left
 
       while (leftIndex < rightIndex) {
-          while (array(rightIndex) > array(pivot) && rightIndex > leftIndex) rightIndex -= 1
-          while (array(leftIndex) <= array(pivot) && leftIndex < rightIndex) leftIndex += 1
-
-          if (array(leftIndex) >= array(pivot) && array(rightIndex) <= array(pivot))
-            swap(leftIndex, rightIndex)
+        while (array(rightIndex) > array(pivot) && rightIndex > leftIndex) rightIndex -= 1
+        while (array(leftIndex) <= array(pivot) && leftIndex < rightIndex) leftIndex += 1
+        swap(leftIndex, rightIndex)
       }
 
       while (array(leftIndex) <= array(pivot) && leftIndex < pivot) leftIndex += 1
