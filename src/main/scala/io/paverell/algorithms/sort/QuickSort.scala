@@ -29,14 +29,13 @@ class QuickSort {
       swap(leftIndex, right)
     }
 
-    def impl(left: Int, right: Int): ArrayBuffer[Int] = {
+    def impl(left: Int, right: Int): ArrayBuffer[Int] =
       if (right <= left) array
       else {
         val pivotsIndex = partition(left, right)
         impl(left, pivotsIndex - 1)
         impl(pivotsIndex + 1, right)
       }
-    }
 
     impl(0, array.size - 1)
   }
