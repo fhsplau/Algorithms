@@ -4,9 +4,7 @@ import scala.collection.mutable.ArrayBuffer
 
 class QuickSort {
 
-  def sort(inputArray: ArrayBuffer[Int]): ArrayBuffer[Int] = {
-
-    val array: ArrayBuffer[Int] = inputArray
+  def sort(array: ArrayBuffer[Int]): ArrayBuffer[Int] = {
 
     def swap(first: Int, second: Int): Int = {
       val tmp = array(first)
