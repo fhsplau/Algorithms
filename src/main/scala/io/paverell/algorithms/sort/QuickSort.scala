@@ -8,29 +8,30 @@ class QuickSort {
 
     val array: ArrayBuffer[Int] = inputArray
 
-    def swap(first: Int, second: Int): Unit = {
+    def swap(first: Int, second: Int): Int = {
       val tmp = array(first)
       array(first) = array(second)
       array(second) = tmp
+      first
     }
 
     def partition(left: Int, right: Int): Int = {
+      val pivot = right
       var rightIndex = right - 1
       var leftIndex = left
 
       while (leftIndex < rightIndex) {
-          while (array(rightIndex) > array(right) && rightIndex > leftIndex) rightIndex -= 1
-          while (array(leftIndex) <= array(right) && leftIndex < rightIndex) leftIndex += 1
+          while (array(rightIndex) > array(pivot) && rightIndex > leftIndex) rightIndex -= 1
+          while (array(leftIndex) <= array(pivot) && leftIndex < rightIndex) leftIndex += 1
 
-          if (array(leftIndex) >= array(right) && array(rightIndex) <= array(right) &&
+          if (array(leftIndex) >= array(pivot) && array(rightIndex) <= array(pivot) &&
             leftIndex <= rightIndex)
             swap(leftIndex, rightIndex)
       }
 
-      while (array(leftIndex) <= array(right) && leftIndex < right) leftIndex += 1
+      while (array(leftIndex) <= array(pivot) && leftIndex < pivot) leftIndex += 1
 
       swap(leftIndex, right)
-      leftIndex
     }
 
     def impl(left: Int, right: Int): ArrayBuffer[Int] = {
