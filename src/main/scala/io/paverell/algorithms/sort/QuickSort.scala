@@ -24,8 +24,7 @@ class QuickSort {
           while (array(rightIndex) > array(pivot) && rightIndex > leftIndex) rightIndex -= 1
           while (array(leftIndex) <= array(pivot) && leftIndex < rightIndex) leftIndex += 1
 
-          if (array(leftIndex) >= array(pivot) && array(rightIndex) <= array(pivot) &&
-            leftIndex <= rightIndex)
+          if (array(leftIndex) >= array(pivot) && array(rightIndex) <= array(pivot))
             swap(leftIndex, rightIndex)
       }
 
