@@ -26,7 +26,7 @@ class QuickSort {
 
       while (array(leftIndex) <= array(pivot) && leftIndex < pivot) leftIndex += 1
 
-      swap(leftIndex, right)
+      swap(leftIndex, pivot)
     }
 
     def impl(left: Int, right: Int): ArrayBuffer[Int] =
