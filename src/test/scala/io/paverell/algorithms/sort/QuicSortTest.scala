@@ -20,6 +20,8 @@ class QuicSortTest extends FunSuite with BeforeAndAfter {
   }
 
   test("sort non empty list") {
+    assert(qc.sort(ArrayBuffer(1)) === ArrayBuffer(1))
+    assert(qc.sort(ArrayBuffer(2,1)) === ArrayBuffer(1,2))
     assert(qc.sort(ArrayBuffer(6, 4, 1)) === ArrayBuffer(1, 4, 6))
   }
 
@@ -32,9 +34,8 @@ class QuicSortTest extends FunSuite with BeforeAndAfter {
   }
 
   test("huge array") {
-    val r = Random
     val n = 1000000
-    val a: Seq[Int] = 1 to n map { _ => r.nextInt(n-1)}
+    val a: Seq[Int] = 1 to n map { _ => Random.nextInt(n-1)}
     val array: ArrayBuffer[Int] = ArrayBuffer(a: _*)
 
     assert(qc.sort(array) === array.sorted)
