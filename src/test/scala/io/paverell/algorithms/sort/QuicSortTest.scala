@@ -27,13 +27,14 @@ class QuicSortTest extends FunSuite with BeforeAndAfter {
     assert(qc.sort(ArrayBuffer(1, 2, 3)) === ArrayBuffer(1, 2, 3))
   }
 
-  test("more than one the same int in the list") {
+  test("duplicates in the list") {
     assert(qc.sort(ArrayBuffer(6, 4, 1, 6, 2, 1)) === ArrayBuffer(1, 1, 2, 4, 6, 6))
   }
 
   test("huge array") {
     val r = Random
-    val a: Seq[Int] = 1 to 1000000 map { _ => r.nextInt()}
+    val n = 1000000
+    val a: Seq[Int] = 1 to n map { _ => r.nextInt(n-1)}
     val array: ArrayBuffer[Int] = ArrayBuffer(a: _*)
 
     assert(qc.sort(array) === array.sorted)
