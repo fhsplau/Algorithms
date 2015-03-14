@@ -52,8 +52,7 @@ class MergeSort {
 
     }
 
-    if (list.size <= 1) list
-    else sortImpl(list take list.size / 2, list drop list.size / 2, list)
+    sortImpl(list take list.size / 2, list drop list.size / 2, list)
   }
 
 }
