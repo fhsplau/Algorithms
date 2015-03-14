@@ -5,39 +5,35 @@ import scala.collection.mutable.ArrayBuffer
 class MergeSort {
 
   def sort(list: ArrayBuffer[Int]): ArrayBuffer[Int] = {
-    def merge(l: ArrayBuffer[Int], r: ArrayBuffer[Int], listToMerge: ArrayBuffer[Int]): ArrayBuffer[Int] = {
+    def merge(l: ArrayBuffer[Int], r: ArrayBuffer[Int], lm: ArrayBuffer[Int]): ArrayBuffer[Int] = {
       var i = 0
       var j = 0
       var k = 0
 
-      def updateIndexes(ix: Int, jx: Int, kx: Int): Unit = {
-        i += ix
-        j += jx
-        k += kx
-      }
-
       while (i < l.size && j < r.size) {
         if (l(i) < r(j)) {
-          listToMerge(k) = l(i)
-          updateIndexes(1, 0, 0)
+          lm(k) = l(i)
+          i += 1
         } else {
-          listToMerge(k) = r(j)
-          updateIndexes(0, 1, 0)
+          lm(k) = r(j)
+          j += 1
         }
-        updateIndexes(0, 0, 1)
+        k += 1
       }
 
       while (i < l.size) {
-        listToMerge(k) = l(i)
-        updateIndexes(1, 0, 1)
+        lm(k) = l(i)
+        i += 1
+        k += 1
       }
 
       while (j < r.size) {
-        listToMerge(k) = r(j)
-        updateIndexes(0, 1, 1)
+        lm(k) = r(j)
+        j += 1
+        k += 1
       }
 
-      listToMerge
+      lm
     }
 
     def sortImpl(l: ArrayBuffer[Int], r: ArrayBuffer[Int], listToMerge: ArrayBuffer[Int]): ArrayBuffer[Int] = {
