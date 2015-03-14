@@ -34,7 +34,7 @@ class MergeSortTest extends FunSuite with BeforeAndAfter{
   }
 
   test("huge array") {
-    val n = 3000000
+    val n = 1000000
     val a: Seq[Int] = 1 to n map { _ => Random.nextInt(n-1)}
     val array: ArrayBuffer[Int] = ArrayBuffer(a: _*)
 

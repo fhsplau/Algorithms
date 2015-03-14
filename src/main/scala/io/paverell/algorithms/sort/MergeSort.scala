@@ -37,7 +37,7 @@ class MergeSort {
     }
 
     def sortImpl(l: ArrayBuffer[Int], r: ArrayBuffer[Int], listToMerge: ArrayBuffer[Int]): ArrayBuffer[Int] = {
-      if (l.size < 2 && r.size < 2) merge(l, r, listToMerge)
+      if (listToMerge.size <= 2) merge(l, r, listToMerge)
       else {
         merge(
           sortImpl(l take l.size / 2, l drop l.size / 2, l),
