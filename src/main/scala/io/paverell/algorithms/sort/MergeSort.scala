@@ -2,7 +2,9 @@ package io.paverell.algorithms.sort
 
 import scala.collection.mutable.ArrayBuffer
 
-class MergeSort {
+class MergeSort(mergeVersion: String = "normal") {
+  if (mergeVersion != "normal" && mergeVersion != "recursive")
+    throw new Exception(mergeVersion + " does not exist")
 
   def sort(list: ArrayBuffer[Int]): ArrayBuffer[Int] = {
     def merge(l: ArrayBuffer[Int], r: ArrayBuffer[Int], lm: ArrayBuffer[Int]): ArrayBuffer[Int] = {
@@ -41,16 +43,16 @@ class MergeSort {
         var tmpIndex = startIndex
         var toMergeIndex = 0
 
-        while(tmpIndex < lm.size) {
+        while (tmpIndex < lm.size) {
           lm(tmpIndex) = toMerge(toMergeIndex)
           tmpIndex += 1
-          toMergeIndex +=1
+          toMergeIndex += 1
         }
       }
 
       def mergeImpl(first: ArrayBuffer[Int], second: ArrayBuffer[Int], next: Int): ArrayBuffer[Int] = {
         if (first.isEmpty || second.isEmpty) {
-          if(first.isEmpty) mergeWith(second, next) else mergeWith(first,next)
+          if (first.isEmpty) mergeWith(second, next) else mergeWith(first, next)
           lm
         }
         else {
@@ -76,11 +78,23 @@ class MergeSort {
     def sortImpl(l: ArrayBuffer[Int], r: ArrayBuffer[Int], listToMerge: ArrayBuffer[Int]): ArrayBuffer[Int] = {
       if (listToMerge.size <= 2) merge(l, r, listToMerge)
       else {
-        merge(
-          sortImpl(l take l.size / 2, l drop l.size / 2, l),
-          sortImpl(r take r.size / 2, r drop r.size / 2, r),
-          listToMerge
-        )
+        val leftSub: (ArrayBuffer[Int], ArrayBuffer[Int]) = (l take l.size / 2, l drop l.size / 2)
+        val rightSub: (ArrayBuffer[Int], ArrayBuffer[Int]) = (r take r.size / 2, r drop r.size / 2)
+
+        mergeVersion match {
+          case "normal" => merge(
+            sortImpl(leftSub._1, leftSub._2, l),
+            sortImpl(rightSub._1, rightSub._2, r),
+            listToMerge
+          )
+
+          case "recursive" => mergeRec(
+            sortImpl(leftSub._1, leftSub._2, l),
+            sortImpl(rightSub._1, rightSub._2, r),
+            listToMerge
+          )
+        }
+
       }
 
     }
