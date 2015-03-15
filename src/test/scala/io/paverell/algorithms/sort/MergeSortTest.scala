@@ -45,7 +45,7 @@ class MergeSortTest extends FunSuite with BeforeAndAfter{
 
   test("recursive algorithm") {
     val rec = new MergeSort("recursive")
-    val n = 10000
+    val n = 100000
     val a: Seq[Int] = 1 to n map { _ => Random.nextInt(n-1)}
     val array: ArrayBuffer[Int] = ArrayBuffer(a: _*)
     val arraySorted = array.sorted

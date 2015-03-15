@@ -57,21 +57,17 @@ class MergeSort(mergeVersion: String = "normal") {
             if (first.isEmpty) mergeWith(second, next) else mergeWith(first, next)
             lm
           }
-          else {
-            val condition: Boolean = first.head < second.head
-            mergeImpl(
-              if (condition) {
-                lm(next) = first.head
-                first.tail
-              } else first,
-              if (!condition) {
-                lm(next) = second.head
-                second.tail
-              } else second,
-              next + 1
-            )
-          }
-
+          else mergeImpl(
+            if (first.head < second.head) {
+              lm(next) = first.head
+              first.tail
+            } else first,
+            if (first.head >= second.head) {
+              lm(next) = second.head
+              second.tail
+            } else second,
+            next + 1
+          )
         }
 
         mergeImpl(l, r, 0)
