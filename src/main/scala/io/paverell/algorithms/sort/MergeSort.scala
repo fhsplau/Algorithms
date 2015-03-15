@@ -75,29 +75,17 @@ class MergeSort(mergeVersion: String = "normal") {
       mergeImpl(l, r, 0)
     }
 
-    def sortImpl(l: ArrayBuffer[Int], r: ArrayBuffer[Int], listToMerge: ArrayBuffer[Int]): ArrayBuffer[Int] = {
+    def sortImpl(l: ArrayBuffer[Int], r: ArrayBuffer[Int], listToMerge: ArrayBuffer[Int]): ArrayBuffer[Int] =
       if (listToMerge.size <= 2) merge(l, r, listToMerge)
       else {
-        val leftSub: (ArrayBuffer[Int], ArrayBuffer[Int]) = (l take l.size / 2, l drop l.size / 2)
-        val rightSub: (ArrayBuffer[Int], ArrayBuffer[Int]) = (r take r.size / 2, r drop r.size / 2)
+        val leftSub = sortImpl(l take l.size / 2, l drop l.size / 2, l)
+        val rightSub = sortImpl(r take r.size / 2, r drop r.size / 2, r)
 
         mergeVersion match {
-          case "normal" => merge(
-            sortImpl(leftSub._1, leftSub._2, l),
-            sortImpl(rightSub._1, rightSub._2, r),
-            listToMerge
-          )
-
-          case "recursive" => mergeRec(
-            sortImpl(leftSub._1, leftSub._2, l),
-            sortImpl(rightSub._1, rightSub._2, r),
-            listToMerge
-          )
+          case "normal" => merge(leftSub,rightSub,listToMerge)
+          case "recursive" => mergeRec(leftSub, rightSub, listToMerge)
         }
-
       }
-
-    }
 
     sortImpl(list take list.size / 2, list drop list.size / 2, list)
   }
