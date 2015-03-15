@@ -41,36 +41,36 @@ class MergeSort(mergeVersion: String = "normal") {
       }
 
       def mergeRec: ArrayBuffer[Int] = {
-        def mergeWith(toMerge: ArrayBuffer[Int], startIndex: Int): Unit = {
-          var tmpIndex = startIndex
-          var toMergeIndex = 0
+        def mergeWith(toMerge: ArrayBuffer[Int], startIndex: Int, lmIndex: Int): Unit = {
+          var tmpLmIndex = lmIndex
+          var toMergeIndex = startIndex
 
-          while (tmpIndex < lm.size) {
-            lm(tmpIndex) = toMerge(toMergeIndex)
-            tmpIndex += 1
+          while (tmpLmIndex < lm.size) {
+            lm(tmpLmIndex) = toMerge(toMergeIndex)
+            tmpLmIndex += 1
             toMergeIndex += 1
           }
         }
 
-        def mergeImpl(first: ArrayBuffer[Int], second: ArrayBuffer[Int], next: Int): ArrayBuffer[Int] = {
-          if (first.isEmpty || second.isEmpty) {
-            if (first.isEmpty) mergeWith(second, next) else mergeWith(first, next)
+        def mergeImpl(nextLeft: Int, nextRight: Int, next: Int): ArrayBuffer[Int] = {
+          if (nextRight >= r.size || nextLeft >= l.size) {
+            if (nextLeft >= l.size) mergeWith(r, nextRight, next) else mergeWith(l, nextLeft, next)
             lm
           }
           else mergeImpl(
-            if (first.head < second.head) {
-              lm(next) = first.head
-              first.tail
-            } else first,
-            if (first.head >= second.head) {
-              lm(next) = second.head
-              second.tail
-            } else second,
+            if (l(nextLeft) <= r(nextRight)) {
+              lm(next) = l(nextLeft)
+              nextLeft + 1
+            } else nextLeft,
+            if (r(nextRight) < l(nextLeft)) {
+              lm(next) = r(nextRight)
+              nextRight + 1
+            } else nextRight,
             next + 1
           )
         }
 
-        mergeImpl(l, r, 0)
+        mergeImpl(0, 0, 0)
       }
 
       mergeVersion match {
