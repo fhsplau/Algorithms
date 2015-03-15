@@ -36,6 +36,43 @@ class MergeSort {
       lm
     }
 
+    def mergeRec(l: ArrayBuffer[Int], r: ArrayBuffer[Int], lm: ArrayBuffer[Int]): ArrayBuffer[Int] = {
+      def mergeWith(toMerge: ArrayBuffer[Int], startIndex: Int): Unit = {
+        var tmpIndex = startIndex
+        var toMergeIndex = 0
+
+        while(tmpIndex < lm.size) {
+          lm(tmpIndex) = toMerge(toMergeIndex)
+          tmpIndex += 1
+          toMergeIndex +=1
+        }
+      }
+
+      def mergeImpl(first: ArrayBuffer[Int], second: ArrayBuffer[Int], next: Int): ArrayBuffer[Int] = {
+        if (first.isEmpty || second.isEmpty) {
+          if(first.isEmpty) mergeWith(second, next) else mergeWith(first,next)
+          lm
+        }
+        else {
+          val condition: Boolean = first.head < second.head
+          mergeImpl(
+            if (condition) {
+              lm(next) = first.head
+              first.tail
+            } else first,
+            if (!condition) {
+              lm(next) = second.head
+              second.tail
+            } else second,
+            next + 1
+          )
+        }
+
+      }
+
+      mergeImpl(l, r, 0)
+    }
+
     def sortImpl(l: ArrayBuffer[Int], r: ArrayBuffer[Int], listToMerge: ArrayBuffer[Int]): ArrayBuffer[Int] = {
       if (listToMerge.size <= 2) merge(l, r, listToMerge)
       else {
