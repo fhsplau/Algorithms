@@ -7,32 +7,32 @@ class MergeSort(mergeVersion: String = "normal") {
     throw new Exception(mergeVersion + " does not exist")
 
   def sort(list: ArrayBuffer[Int]): ArrayBuffer[Int] = {
-    def merge(l: ArrayBuffer[Int], r: ArrayBuffer[Int], lm: ArrayBuffer[Int]): ArrayBuffer[Int] = {
+    def merge(left: ArrayBuffer[Int], right: ArrayBuffer[Int], lm: ArrayBuffer[Int]): ArrayBuffer[Int] = {
 
       def mergeWhile: ArrayBuffer[Int] = {
         var i = 0
         var j = 0
         var k = 0
 
-        while (i < l.size && j < r.size) {
-          if (l(i) < r(j)) {
-            lm(k) = l(i)
+        while (i < left.size && j < right.size) {
+          if (left(i) < right(j)) {
+            lm(k) = left(i)
             i += 1
           } else {
-            lm(k) = r(j)
+            lm(k) = right(j)
             j += 1
           }
           k += 1
         }
 
-        while (i < l.size) {
-          lm(k) = l(i)
+        while (i < left.size) {
+          lm(k) = left(i)
           i += 1
           k += 1
         }
 
-        while (j < r.size) {
-          lm(k) = r(j)
+        while (j < right.size) {
+          lm(k) = right(j)
           j += 1
           k += 1
         }
@@ -41,36 +41,38 @@ class MergeSort(mergeVersion: String = "normal") {
       }
 
       def mergeRec: ArrayBuffer[Int] = {
-        def mergeWith(toMerge: ArrayBuffer[Int], startIndex: Int, lmIndex: Int): Unit = {
-          var tmpLmIndex = lmIndex
+        var lmIndex = 0
+
+        def mergeWith(toMerge: ArrayBuffer[Int], startIndex: Int): Unit = {
           var toMergeIndex = startIndex
 
-          while (tmpLmIndex < lm.size) {
-            lm(tmpLmIndex) = toMerge(toMergeIndex)
-            tmpLmIndex += 1
+          while (lmIndex < lm.size) {
+            lm(lmIndex) = toMerge(toMergeIndex)
+            lmIndex += 1
             toMergeIndex += 1
           }
         }
 
-        def mergeImpl(nextLeft: Int, nextRight: Int, next: Int): ArrayBuffer[Int] = {
-          if (nextRight >= r.size || nextLeft >= l.size) {
-            if (nextLeft >= l.size) mergeWith(r, nextRight, next) else mergeWith(l, nextLeft, next)
-            lm
-          }
+        def mergeImpl(nextLeft: Int, nextRight: Int): Unit = {
+          if (nextRight >= right.size || nextLeft >= left.size)
+            if (nextLeft >= left.size) mergeWith(right, nextRight) else mergeWith(left, nextLeft)
           else mergeImpl(
-            if (l(nextLeft) <= r(nextRight)) {
-              lm(next) = l(nextLeft)
+            if (left(nextLeft) <= right(nextRight)) {
+              lm(lmIndex) = left(nextLeft)
+              lmIndex += 1
               nextLeft + 1
             } else nextLeft,
-            if (r(nextRight) < l(nextLeft)) {
-              lm(next) = r(nextRight)
+            if (right(nextRight) < left(nextLeft)) {
+              lm(lmIndex) = right(nextRight)
+              lmIndex += 1
               nextRight + 1
-            } else nextRight,
-            next + 1
+            } else nextRight
+
           )
         }
 
-        mergeImpl(0, 0, 0)
+        mergeImpl(0, 0)
+        lm
       }
 
       mergeVersion match {
