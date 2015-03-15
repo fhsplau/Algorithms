@@ -10,7 +10,7 @@ import scala.collection.mutable.ArrayBuffer
 @RunWith(classOf[JUnitRunner])
 class MergeSortTest extends FunSuite with BeforeAndAfter{
   var ms: MergeSort = _
-  
+
   before {
     ms = new MergeSort
   }
@@ -34,7 +34,7 @@ class MergeSortTest extends FunSuite with BeforeAndAfter{
   }
 
   test("huge array") {
-    val n = 100000
+    val n = 1000000
     val a: Seq[Int] = 1 to n map { _ => Random.nextInt(n-1)}
     val array: ArrayBuffer[Int] = ArrayBuffer(a: _*)
     val arraySorted = array.sorted

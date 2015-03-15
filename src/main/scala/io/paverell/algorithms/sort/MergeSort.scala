@@ -10,9 +10,7 @@ class MergeSort(mergeVersion: String = "normal") {
     def merge(left: ArrayBuffer[Int], right: ArrayBuffer[Int], lm: ArrayBuffer[Int]): ArrayBuffer[Int] = {
 
       def mergeWhile: ArrayBuffer[Int] = {
-        var i = 0
-        var j = 0
-        var k = 0
+        var i, j, k = 0
 
         while (i < left.size && j < right.size) {
           if (left(i) < right(j)) {
@@ -43,13 +41,12 @@ class MergeSort(mergeVersion: String = "normal") {
       def mergeRec: ArrayBuffer[Int] = {
         var lmIndex, leftIndex, rightIndex = 0
 
-        def mergeWith(toMerge: ArrayBuffer[Int], startIndex: Int): Unit = {
-          var toMergeIndex = startIndex
-
-          while (lmIndex < lm.size) {
-            lm(lmIndex) = toMerge(toMergeIndex)
+        def mergeWith(array: ArrayBuffer[Int], onIndex: Int): ArrayBuffer[Int] = {
+          if(lmIndex >= lm.size) lm
+          else {
+            lm(lmIndex) = array(onIndex)
             lmIndex += 1
-            toMergeIndex += 1
+            mergeWith(array, onIndex + 1)
           }
         }
 
@@ -66,17 +63,15 @@ class MergeSort(mergeVersion: String = "normal") {
           lmIndex += 1
         }
 
-        def mergeImpl(): Unit = {
-          if (rightIndex >= right.size || leftIndex >= left.size)
-            if (leftIndex >= left.size) mergeWith(right, rightIndex) else mergeWith(left, leftIndex)
-          else {
+        def mergeImpl(): ArrayBuffer[Int] = leftIndex match {
+          case i if leftIndex >= left.size => mergeWith(right, rightIndex)
+          case i if rightIndex >= right.size => mergeWith(left, leftIndex)
+          case _ =>
             compareIndexes()
             mergeImpl()
-          }
         }
 
         mergeImpl()
-        lm
       }
 
       mergeVersion match {
