@@ -54,6 +54,14 @@ class MergeSortTest extends FunSuite with BeforeAndAfter{
     assert(rec.sort(array) === arraySorted)
   }
 
+  test("huge array sorted") {
+    val n = 1000000
+    val a: Seq[Int] = 1 to n
+    val array: ArrayBuffer[Int] = ArrayBuffer(a: _*)
+
+    assert(ms.sort(array) === array.sorted)
+  }
+
   test("exception if bad algrorithm name") {
     intercept[Exception] {
       new MergeSort("badAlgorithm")
