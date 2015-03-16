@@ -31,7 +31,6 @@ class QuickSort {
     }
 
     def randomizedPartition(left: Int, right: Int): Int = {
-//      val pivot = left + Random.nextInt(right - left)
       swap(left + Random.nextInt(right - left), right)
       partition(left, right)
     }
