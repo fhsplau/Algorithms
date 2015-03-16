@@ -1,6 +1,7 @@
 package io.paverell.algorithms.sort
 
 import scala.collection.mutable.ArrayBuffer
+import scala.util.Random
 
 class QuickSort {
 
@@ -29,10 +30,16 @@ class QuickSort {
       swap(leftIndex, pivot)
     }
 
+    def randomizedPartition(left: Int, right: Int): Int = {
+//      val pivot = left + Random.nextInt(right - left)
+      swap(left + Random.nextInt(right - left), right)
+      partition(left, right)
+    }
+
     def impl(left: Int, right: Int): ArrayBuffer[Int] =
       if (right <= left) array
       else {
-        val pivotsIndex = partition(left, right)
+        val pivotsIndex = randomizedPartition(left, right)
         impl(left, pivotsIndex - 1)
         impl(pivotsIndex + 1, right)
       }
