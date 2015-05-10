@@ -6,10 +6,10 @@ import org.scalatest.{BeforeAndAfter, FunSuite}
 
 @RunWith(classOf[JUnitRunner])
 class NodeTest extends FunSuite with BeforeAndAfter {
-  var node: BSTree = _
+  var node: Node = _
 
   before {
-    node = new Node(10, new EmptyNode, new EmptyNode)
+    node = new NonEmptyNode(10, EmptyNode, EmptyNode)
   }
 
   test("can add element to a node") {
@@ -23,9 +23,21 @@ class NodeTest extends FunSuite with BeforeAndAfter {
 
   test("can remove from left subtree") {
     node = addAll(List(8, 12, 6, 9, 13, 11), node)
-    node.remove(8)
+    node = node.remove(8)
     assertContainsAll(List(10, 12, 6, 9, 13, 11), node)
     assert(!node.contains(8))
+  }
+
+  test("can remove from right subtree") {
+    node = addAll(List(8, 12, 6, 9, 13, 11), node)
+    node = node.remove(12)
+    assertContainsAll(List(10, 13, 6, 9, 8, 11), node)
+    assert(!node.contains(12))
+  }
+
+  test("can remove a leaf") {
+    node = node.remove(10)
+    assert(node.isEmpty)
   }
 
   test("can retrieve min value from node") {
@@ -44,14 +56,16 @@ class NodeTest extends FunSuite with BeforeAndAfter {
 
   test("node is not a leaf if it has left or right subtree") {
     node = node.add(12)
+    val node2 = new NonEmptyNode(11, new NonEmptyNode(9, EmptyNode, EmptyNode), EmptyNode)
     assertContainsAll(List(10, 12), node)
     assert(!node.isLeaf)
+    assert(!node2.isLeaf)
   }
 
-  def assertContainsAll(elements: List[Int], node: BSTree): Unit =
+  def assertContainsAll(elements: List[Int], node: Node): Unit =
     assert(elements.map(x => node.contains(x)).reduceLeft(_ && _))
 
-  def addAll(elements: List[Int], node: BSTree): BSTree = {
+  def addAll(elements: List[Int], node: Node): Node = {
     if (elements.isEmpty) node else addAll(elements.tail, node.add(elements.head))
   }
 }

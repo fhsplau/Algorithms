@@ -1,12 +1,12 @@
 package io.paverell.datastructures.BST
 
 
-abstract class BSTree {
-  def add(e: Int): BSTree
+trait Node {
+  def add: Int => Node
 
-  def contains(e: Int): Boolean
+  def contains: Int => Boolean
 
-  def remove(e: Int): BSTree
+  def remove: Int => Node
 
   def min: Int
 
@@ -17,13 +17,13 @@ abstract class BSTree {
   def isEmpty: Boolean
 }
 
-class EmptyNode extends BSTree {
+object EmptyNode extends Node {
 
-  override def add(element: Int): BSTree = new Node(element, new EmptyNode, new EmptyNode)
+  override def add: Int => Node = element => new NonEmptyNode(element, EmptyNode, EmptyNode)
 
-  override def contains(element: Int): Boolean = false
+  override def contains: Int => Boolean = e => false
 
-  override def remove(e: Int): BSTree = this
+  override def remove: Int => Node = element => this
 
   override def min: Int = ???
 
@@ -36,44 +36,57 @@ class EmptyNode extends BSTree {
   override def toString = "."
 }
 
-class Node(e: Int, left: BSTree, right: BSTree) extends BSTree {
-  override def add(element: Int): BSTree =
-    if (element > e) new Node(e, left, right.add(element))
-    else if (element < e) new Node(e, left.add(element), right)
+class NonEmptyNode(root: Int, left: Node, right: Node) extends Node {
+  override def add: Int => Node = e =>
+    if (e > root) new NonEmptyNode(root, left, right.add(e))
+    else if (e < root) new NonEmptyNode(root, left.add(e), right)
     else this
 
-  override def contains(element: Int): Boolean =
-    if (element > e) right.contains(element)
-    else if (element < e) left.contains(element)
+  override def contains: Int => Boolean = e =>
+    if (e > root) right.contains(e)
+    else if (e < root) left.contains(e)
     else true
 
-  override def remove(element: Int): BSTree = ???
+  override def remove: Int => Node = {
+    case i if i > root => new NonEmptyNode(root, left, right.remove(i))
+    case i if i < root => new NonEmptyNode(root, left.remove(i), right)
+    case i if i == root => removeElement()
+  }
 
-  override def min: Int = if (left.isEmpty) e else left.min
+  private val removeElement: () => Node = () =>
+    if (this.isLeaf) EmptyNode
+    else if (!left.isEmpty && right.isEmpty) new NonEmptyNode(left.max, left.remove(left.max), EmptyNode)
+    else if (!right.isEmpty && left.isEmpty) new NonEmptyNode(right.min, EmptyNode, right.remove(right.min))
+    else new NonEmptyNode(left.max, left.remove(left.max), right)
 
-  override def max: Int = if (right.isEmpty) e else right.max
+  override def min: Int = if (left.isEmpty) root else left.min
+
+  override def max: Int = if (right.isEmpty) root else right.max
 
   override def isLeaf: Boolean = left.isEmpty && right.isEmpty
 
   override def isEmpty: Boolean = false
 
-  override def toString = "{" + left + e + right + "}"
+  override def toString = "{" + left + root + right + "}"
 }
 
-class BST {
+class BST extends Node {
 
-  private var root: BSTree = null
+  private val root: Node = EmptyNode
 
-  def isEmpty: Boolean = root == null
+  def isEmpty: Boolean = root.isEmpty
 
-  def contains(element: Int) = root.contains(element)
+  override def add: (Int) => Node = e =>
+    if (root.isEmpty) new NonEmptyNode(e, EmptyNode, EmptyNode)
+    else root.add(e)
 
-  def add(element: Int): BSTree = if (root == null) {
-    root = new Node(element, new EmptyNode, new EmptyNode)
-    root
-  } else {
-    root = root.add(element)
-    root
-  }
+  override def isLeaf: Boolean = ???
 
+  override def max: Int = ???
+
+  override def remove: (Int) => Node = ???
+
+  override def min: Int = ???
+
+  override def contains: (Int) => Boolean = element => root.contains(element)
 }
