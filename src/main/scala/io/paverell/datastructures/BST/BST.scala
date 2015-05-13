@@ -1,7 +1,6 @@
 package io.paverell.datastructures.BST
 
-
-sealed trait Node {
+trait Node {
   def add: Int => Node
 
   def contains: Int => Boolean
@@ -12,7 +11,7 @@ sealed trait Node {
 
   def max: Option[Int]
 
-  def isLeaf: Boolean
+  def isLeaf: Option[Boolean]
 
   def isEmpty: Boolean
 
@@ -25,13 +24,13 @@ object EmptyNode extends Node {
 
   override def contains: Int => Boolean = e => false
 
-  override def remove: Int => Node = element => this
+  override def remove: Int => Node = element => throw new IndexOutOfBoundsException("empty node")
 
   override def min: Option[Int] = None
 
   override def max: Option[Int] = None
 
-  override def isLeaf: Boolean = true
+  override def isLeaf: Option[Boolean] = None
 
   override def isEmpty: Boolean = true
 
@@ -57,7 +56,7 @@ case class NonEmptyNode(root: Int, left: Node, right: Node) extends Node {
   }
 
   private val removeElement: () => Node = () =>
-    if (this.isLeaf) EmptyNode
+    if (this.isLeaf.get) EmptyNode
     else if (!left.isEmpty && right.isEmpty) new NonEmptyNode(left.max.get, left.remove(left.max.get), EmptyNode)
     else if (!right.isEmpty && left.isEmpty) new NonEmptyNode(right.min.get, EmptyNode, right.remove(right.min.get))
     else new NonEmptyNode(left.max.get, left.remove(left.max.get), right)
@@ -66,7 +65,7 @@ case class NonEmptyNode(root: Int, left: Node, right: Node) extends Node {
 
   override def max: Option[Int] = if (right.isEmpty) Option(root) else right.max
 
-  override def isLeaf: Boolean = left.isEmpty && right.isEmpty
+  override def isLeaf: Option[Boolean] = Option(left.isEmpty && right.isEmpty)
 
   override def isEmpty: Boolean = false
 
@@ -85,7 +84,7 @@ class BST extends Node {
     if (root.isEmpty) new NonEmptyNode(e, EmptyNode, EmptyNode)
     else root.add(e)
 
-  override def isLeaf: Boolean = root.isLeaf
+  override def isLeaf: Option[Boolean] = root.isLeaf
 
   override def max: Option[Int] = root.max
 

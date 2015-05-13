@@ -52,15 +52,15 @@ class NodeTest extends FunSuite with BeforeAndAfter {
   }
 
   test("node is a leaf if it don't has left and right subtree") {
-    node.isLeaf shouldBe true
+    node.isLeaf shouldBe Some(true)
   }
 
   test("node is not a leaf if it has left or right subtree") {
     node = node.add(12)
     val node2 = new NonEmptyNode(11, new NonEmptyNode(9, EmptyNode, EmptyNode), EmptyNode)
     assertContainsAll(List(10, 12), node)
-    node.isLeaf should not be true
-    node2.isLeaf should not be true
+    node.isLeaf should not be Some(true)
+    node2.isLeaf should not be Some(true)
   }
 
   test("can retrieve size from a node") {
