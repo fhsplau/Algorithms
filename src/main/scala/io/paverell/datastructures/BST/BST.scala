@@ -8,9 +8,9 @@ sealed trait Node {
 
   def remove: Int => Node
 
-  def min: Int
+  def min: Option[Int]
 
-  def max: Int
+  def max: Option[Int]
 
   def isLeaf: Boolean
 
@@ -27,9 +27,9 @@ object EmptyNode extends Node {
 
   override def remove: Int => Node = element => this
 
-  override def min: Int = ???
+  override def min: Option[Int] = None
 
-  override def max: Int = ???
+  override def max: Option[Int] = None
 
   override def isLeaf: Boolean = true
 
@@ -43,8 +43,7 @@ object EmptyNode extends Node {
 case class NonEmptyNode(root: Int, left: Node, right: Node) extends Node {
   override def add: Int => Node = e =>
     if (e > root) new NonEmptyNode(root, left, right.add(e))
-    else if (e < root) new NonEmptyNode(root, left.add(e), right)
-    else this
+    else new NonEmptyNode(root, left.add(e), right)
 
   override def contains: Int => Boolean = e =>
     if (e > root) right.contains(e)
@@ -59,13 +58,13 @@ case class NonEmptyNode(root: Int, left: Node, right: Node) extends Node {
 
   private val removeElement: () => Node = () =>
     if (this.isLeaf) EmptyNode
-    else if (!left.isEmpty && right.isEmpty) new NonEmptyNode(left.max, left.remove(left.max), EmptyNode)
-    else if (!right.isEmpty && left.isEmpty) new NonEmptyNode(right.min, EmptyNode, right.remove(right.min))
-    else new NonEmptyNode(left.max, left.remove(left.max), right)
+    else if (!left.isEmpty && right.isEmpty) new NonEmptyNode(left.max.get, left.remove(left.max.get), EmptyNode)
+    else if (!right.isEmpty && left.isEmpty) new NonEmptyNode(right.min.get, EmptyNode, right.remove(right.min.get))
+    else new NonEmptyNode(left.max.get, left.remove(left.max.get), right)
 
-  override def min: Int = if (left.isEmpty) root else left.min
+  override def min: Option[Int] = if (left.isEmpty) Option(root) else left.min
 
-  override def max: Int = if (right.isEmpty) root else right.max
+  override def max: Option[Int] = if (right.isEmpty) Option(root) else right.max
 
   override def isLeaf: Boolean = left.isEmpty && right.isEmpty
 
@@ -86,13 +85,13 @@ class BST extends Node {
     if (root.isEmpty) new NonEmptyNode(e, EmptyNode, EmptyNode)
     else root.add(e)
 
-  override def isLeaf: Boolean = ???
+  override def isLeaf: Boolean = root.isLeaf
 
-  override def max: Int = ???
+  override def max: Option[Int] = root.max
 
-  override def remove: (Int) => Node = ???
+  override def remove: (Int) => Node = e => root.remove(e)
 
-  override def min: Int = ???
+  override def min: Option[Int] = root.min
 
   override def contains: Int => Boolean = element => root.contains(element)
 

@@ -43,12 +43,12 @@ class NodeTest extends FunSuite with BeforeAndAfter {
 
   test("can retrieve min value from node") {
     node = addAll(List(8, 12, 6, 9, 13, 11), node)
-    node.min shouldEqual 6
+    node.min shouldEqual Some(6)
   }
 
   test("can retrieve max value from node") {
     node = addAll(List(8, 12, 6, 9, 13, 11), node)
-    node.max shouldEqual 13
+    node.max shouldEqual Some(13)
   }
 
   test("node is a leaf if it don't has left and right subtree") {
