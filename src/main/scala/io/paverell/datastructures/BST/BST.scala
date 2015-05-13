@@ -1,7 +1,7 @@
 package io.paverell.datastructures.BST
 
 
-trait Node {
+sealed trait Node {
   def add: Int => Node
 
   def contains: Int => Boolean
@@ -40,7 +40,7 @@ object EmptyNode extends Node {
   override val size: Int = 0
 }
 
-class NonEmptyNode(root: Int, left: Node, right: Node) extends Node {
+case class NonEmptyNode(root: Int, left: Node, right: Node) extends Node {
   override def add: Int => Node = e =>
     if (e > root) new NonEmptyNode(root, left, right.add(e))
     else if (e < root) new NonEmptyNode(root, left.add(e), right)
