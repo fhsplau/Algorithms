@@ -1,10 +1,9 @@
 package io.paverell.datastructures.queues
 
+import io.paverell.datastructures.queues.PQTestFramework._
 import org.junit.runner.RunWith
-import org.scalatest.{BeforeAndAfter, FunSuite}
 import org.scalatest.junit.JUnitRunner
-
-import PQTestFramework.tf
+import org.scalatest.{BeforeAndAfter, FunSuite}
 
 @RunWith(classOf[JUnitRunner])
 class PriorityQueueTest extends FunSuite with BeforeAndAfter {
@@ -26,20 +25,20 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
   }
 
   test("after push queue is not empty") {
-    queue.push(10,1)
+    queue.push(10, 1)
     assert(!queue.isEmpty)
   }
 
   test("can push element to the queue") {
-    queue.push(10,1)
+    queue.push(10, 1)
 
     assert(queue.contains(10))
   }
 
   test("can push two elements to the queue") {
-    queue.multiPush(List((10,1),(12,2),(9,1),(14,1),(15,1),(11,1),(8,1)))
+    queue.multiPush(List((10, 1), (12, 2), (9, 1), (14, 1), (15, 1), (11, 1), (8, 1)))
 
-    assert(queue.multiContain(List(14,12,9,8,15,11,10)))
+    assert(queue.multiContain(List(14, 12, 9, 8, 15, 11, 10)))
 
     assert(!queue.contains(1))
   }
@@ -68,12 +67,12 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
   }
 
   test("after pop queue does not contain element") {
-    queue = queue multiPush List((10, 1), (12, 2), (9,1), (8,1), (11,1))
+    queue = queue multiPush List((10, 1), (12, 2), (9, 1), (8, 1), (11, 1))
     queue.pop()
 
     assert(!queue.contains(12))
 
-    assert(queue.multiContain(List(10,9,8,11)))
+    assert(queue.multiContain(List(10, 9, 8, 11)))
   }
 
   test("queue is empty after poped all elements") {
@@ -149,23 +148,23 @@ class PriorityQueueTest extends FunSuite with BeforeAndAfter {
   }
 
   test("smalest priority") {
-    queue.multiPush(List((10,1),(12,2),(8,1)))
+    queue.multiPush(List((10, 1), (12, 2), (8, 1)))
     assert(queue.lowestPriority == 8)
 
-    queue.push(1,1)
+    queue.push(1, 1)
     assert(queue.lowestPriority == 1)
   }
 
-  test("smalest priority of empty queue equals to null"){
+  test("smalest priority of empty queue equals to null") {
     assert(queue.lowestPriority == null)
   }
 
   test("priority queue with string") {
     val aQueue = new PriorityQueue[String](2)
 
-    aQueue.multiPush(List((10,"a"),(8,"b")))
+    aQueue.multiPush(List((10, "a"), (8, "b")))
 
-    assert(aQueue.multiContain(List(10,8)))
+    assert(aQueue.multiContain(List(10, 8)))
 
     assert(aQueue.pop() == "a")
 

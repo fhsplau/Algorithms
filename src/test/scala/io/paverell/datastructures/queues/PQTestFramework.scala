@@ -3,18 +3,12 @@ package io.paverell.datastructures.queues
 class TestFramework[T](q: PriorityQueue[T]){
 
   def multiPush(toPush: List[(Int, T)]): PriorityQueue[T] = {
-    for (push <- toPush) {
-      q.push(push._1, push._2)
-    }
-
+    toPush.foreach(x => q.push(x._1, x._2))
     q
   }
 
   def multiPop(howMany: Int): PriorityQueue[T] = {
-    for (t <- 0 to howMany - 1) {
-      q.pop()
-    }
-
+    (0 to howMany-1).foreach(x => q.pop())
     q
   }
 
