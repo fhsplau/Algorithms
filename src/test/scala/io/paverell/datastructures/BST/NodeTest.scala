@@ -67,6 +67,12 @@ class NodeTest extends FunSuite with BeforeAndAfter {
     assert(node.size == 7)
   }
 
+  test("size of left and right subtrees is smaller than roots size") {
+    node = addAll(List(8, 12, 6, 9, 13, 11), node)
+    assert(node.asInstanceOf[NonEmptyNode].left.size < node.size)
+    assert(node.asInstanceOf[NonEmptyNode].right.size < node.size)
+  }
+
   def assertContainsAll(elements: List[Int], node: Node): Unit =
     assert(elements.map(x => node.contains(x)).reduceLeft(_ && _))
 
