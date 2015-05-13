@@ -62,6 +62,11 @@ class NodeTest extends FunSuite with BeforeAndAfter {
     assert(!node2.isLeaf)
   }
 
+  test("can retrieve size from a node") {
+    node = addAll(List(8, 12, 6, 9, 13, 11), node)
+    assert(node.size == 7)
+  }
+
   def assertContainsAll(elements: List[Int], node: Node): Unit =
     assert(elements.map(x => node.contains(x)).reduceLeft(_ && _))
 

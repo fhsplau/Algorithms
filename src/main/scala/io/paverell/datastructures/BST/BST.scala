@@ -15,6 +15,8 @@ trait Node {
   def isLeaf: Boolean
 
   def isEmpty: Boolean
+
+  val size: Int
 }
 
 object EmptyNode extends Node {
@@ -34,6 +36,8 @@ object EmptyNode extends Node {
   override def isEmpty: Boolean = true
 
   override def toString = "."
+
+  override val size: Int = 0
 }
 
 class NonEmptyNode(root: Int, left: Node, right: Node) extends Node {
@@ -68,6 +72,8 @@ class NonEmptyNode(root: Int, left: Node, right: Node) extends Node {
   override def isEmpty: Boolean = false
 
   override def toString = "{" + left + root + right + "}"
+
+  override val size: Int = left.size + 1 + right.size
 }
 
 class BST extends Node {
@@ -88,5 +94,7 @@ class BST extends Node {
 
   override def min: Int = ???
 
-  override def contains: (Int) => Boolean = element => root.contains(element)
+  override def contains: Int => Boolean = element => root.contains(element)
+
+  override val size: Int = root.size
 }
